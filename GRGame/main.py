@@ -362,12 +362,12 @@ def kol():
     elif lose_igrok2 == True:
         game_over = text.render("GAME OVER, press "'"SPEACE"'" to start game",True,(WHITE)) #пишу что человек проиграл и если хочет продолжить играть то пусть нажмет SPEASCE
         OSwin.blit(game_over,(90,350)) #выставляю надпись game over на показ
-        image_igrok2 = pygame.image.load("common_images/celovek_sinij_placet0.png")#меняю человека на плачушего
+        image_igrok2 = pygame.image.load("common_images/celovek_sinij_zeljonka0.png")#меняю человека на плачушего
         if stop_smerti_igrok2 == False:
             smerti_igrok2 += 1
             stop_smerti_igrok2 = True
     else:
-        image_igrok = pygame.image.load("common_images/celovek_zeljonka0.png") #востанавливаю картинку игрока, с плачущего на улыбающегося
+        image_igrok = pygame.image.load("common_images/celovek_1.png") #востанавливаю картинку игрока, с плачущего на улыбающегося
         image_igrok2 = pygame.image.load("common_images/celovek_sinij0.png") #востанавливаю картинку игрока, с плачущего на улыбающегося
 
     pygame.display.update()  
