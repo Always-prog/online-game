@@ -148,7 +148,7 @@ visota_zvezda = 25
 
 OSwin = pygame.display.set_mode((OSwin_shirota,OSwin_visota))#создаю окно
 pygame.display.set_caption("GREEN RUN")#имя окна
-pygame.display.set_icon(pygame.image.load("tablicka_GR.ico"))
+pygame.display.set_icon(pygame.image.load("common_images/tablicka_GR.ico"))
 
 ###загрузка--------------------
 ###загрузка звуков 
@@ -157,11 +157,11 @@ pygame.display.set_icon(pygame.image.load("tablicka_GR.ico"))
 
 ### загрузка картинок----------------------
 
-image_igrok = pygame.image.load("celovek_zeljonka0.png") #стоячий человек
-image_igrok2 = pygame.image.load("celovek_sinij0.png") #стоячий человек
-image_kol = pygame.image.load("raznocvetni_kol.png") #загружаю картинку кола
-image_score = pygame.image.load("zvezda_s_rogami4.png")#загружаю картинку звезды
-djungli1 = pygame.image.load("djungli3_fon.png") #фон
+image_igrok = pygame.image.load("common_images/celovek_zeljonka0.png") #стоячий человек
+image_igrok2 = pygame.image.load("common_images/celovek_sinij0.png") #стоячий человек
+image_kol = pygame.image.load("common_images/raznocvetni_kol.png") #загружаю картинку кола
+image_score = pygame.image.load("common_images/zvezda_s_rogami4.png")#загружаю картинку звезды
+djungli1 = pygame.image.load("common_images/djungli3_fon.png") #фон
 
 
 
@@ -170,22 +170,36 @@ djungli1 = pygame.image.load("djungli3_fon.png") #фон
 
 
 
-walk_left =[pygame.image.load("celovek_zeljonka_left1.png"), # делаю список картинок движущихся в лево для персонажа
-            pygame.image.load("celovek_zeljonka_left2.png"),
-            pygame.image.load("celovek_zeljonka_left3.png"),
-            pygame.image.load("celovek_zeljonka_left4.png"),
-            pygame.image.load("celovek_zeljonka_left5.png")
+walk_left =[pygame.image.load("walkleft/celovek_zeljonka_left1.png"), # делаю список картинок движущихся в лево для персонажа
+            pygame.image.load("walkleft/celovek_zeljonka_left2.png"),
+            pygame.image.load("walkleft/celovek_zeljonka_left3.png"),
+            pygame.image.load("walkleft/celovek_zeljonka_left4.png"),
+            pygame.image.load("walkleft/celovek_zeljonka_left5.png")
             ]
 
 
 
-walk_right =[pygame.image.load("celovek_zeljonka_right1.png"),#делаю список картинок движущихся в вправо для персонажа
-             pygame.image.load("celovek_zeljonka_right2.png"),
-             pygame.image.load("celovek_zeljonka_right3.png"),
-             pygame.image.load("celovek_zeljonka_right4.png"),
-             pygame.image.load("celovek_zeljonka_right5.png")
+walk_right =[pygame.image.load("walkright/celovek_zeljonka_right1.png"),#делаю список картинок движущихся в вправо для персонажа
+             pygame.image.load("walkright/celovek_zeljonka_right2.png"),
+             pygame.image.load("walkright/celovek_zeljonka_right3.png"),
+             pygame.image.load("walkright/celovek_zeljonka_right4.png"),
+             pygame.image.load("walkright/celovek_zeljonka_right5.png")
              ]
+walk_left2 =[pygame.image.load("walkleft/celovek_sinij_left1.png"), # делаю список картинок движущихся в лево для персонажа
+            pygame.image.load("walkleft/celovek_sinij_left2.png"),
+            pygame.image.load("walkleft/celovek_sinij_left3.png"),
+            pygame.image.load("walkleft/celovek_sinij_left4.png"),
+            pygame.image.load("walkleft/celovek_sinij_left5.png")
+            ]
 
+
+
+walk_right2 =[pygame.image.load("walkright/celovek_sinij_right1.png"),#делаю список картинок движущихся в вправо для персонажа
+             pygame.image.load("walkright/celovek_sinij_right2.png"),
+             pygame.image.load("walkright/celovek_sinij_right3.png"),
+             pygame.image.load("walkright/celovek_sinij_right4.png"),
+             pygame.image.load("walkright/celovek_sinij_right5.png")
+             ]
 
 ### конец загрузки анимации ходьбы
 #конец загрузки картинок------------------
@@ -238,7 +252,9 @@ def dejstvija(command): #это читы
 def draw_OSwin_hodjba():
     global animacija_cislo ######
     global walk_left            ###
+    global walk_left2            ###
     global walk_right
+    global walk_right2
     global x_igrok                  ###>>>>>>>>>> беру переменые из программы
     global y_igrok                ####
     global animacija_left_igrok ###
@@ -270,11 +286,11 @@ def draw_OSwin_hodjba():
         animacija_cislo2 = 0
 
     if animacija_left_igrok2 == True:
-        OSwin.blit(walk_left[animacija_cislo2 // 5], (x_igrok2, y_igrok2))  # выставляю картинку из списка "walk_left"
+        OSwin.blit(walk_left2[animacija_cislo2 // 5], (x_igrok2, y_igrok2))  # выставляю картинку из списка "walk_left"
         animacija_left_igrok2 = False
 
     elif animacija_right_igrok2 == True:
-        OSwin.blit(walk_right[animacija_cislo2 // 5], (x_igrok2, y_igrok2))  # выставляю картинку из списка "walk_right"
+        OSwin.blit(walk_right2[animacija_cislo2 // 5], (x_igrok2, y_igrok2))  # выставляю картинку из списка "walk_right"
         animacija_right_igrok2 = False
 
     else:
@@ -339,20 +355,20 @@ def kol():
     if lose_igrok == True:
         game_over = text.render("GAME OVER, press "'"SPEACE"'" to start game",True,(WHITE)) #пишу что человек проиграл и если хочет продолжить играть то пусть нажмет SPEASCE
         OSwin.blit(game_over,(90,350)) #выставляю надпись game over на показ
-        image_igrok = pygame.image.load("celovek_zeljonka_placet0.png")#меняю человека на плачушего
+        image_igrok = pygame.image.load("common_images/celovek_zeljonka_placet0.png")#меняю человека на плачушего
         if stop_smerti_igrok == False:
             smerti_igrok += 1
             stop_smerti_igrok = True
     elif lose_igrok2 == True:
         game_over = text.render("GAME OVER, press "'"SPEACE"'" to start game",True,(WHITE)) #пишу что человек проиграл и если хочет продолжить играть то пусть нажмет SPEASCE
         OSwin.blit(game_over,(90,350)) #выставляю надпись game over на показ
-        image_igrok2 = pygame.image.load("celovek_sinij_placet0.png")#меняю человека на плачушего
+        image_igrok2 = pygame.image.load("common_images/celovek_sinij_placet0.png")#меняю человека на плачушего
         if stop_smerti_igrok2 == False:
             smerti_igrok2 += 1
             stop_smerti_igrok2 = True
     else:
-        image_igrok = pygame.image.load("celovek_zeljonka0.png") #востанавливаю картинку игрока, с плачущего на улыбающегося
-        image_igrok2 = pygame.image.load("celovek_sinij0.png") #востанавливаю картинку игрока, с плачущего на улыбающегося
+        image_igrok = pygame.image.load("common_images/celovek_zeljonka0.png") #востанавливаю картинку игрока, с плачущего на улыбающегося
+        image_igrok2 = pygame.image.load("common_images/celovek_sinij0.png") #востанавливаю картинку игрока, с плачущего на улыбающегося
 
     pygame.display.update()  
             
