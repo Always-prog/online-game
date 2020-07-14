@@ -4,9 +4,14 @@ from tkinter import *
 import random
 import pygame
 import sys
-
+from INTERNET.client import client
 pygame.init() #вызываю все методы pygame
 
+cli = client(host="localhost", port=9090)
+cli.connect_server()
+if cli == False:
+    print("ou nou")
+    sys.exit()
 
 
 
@@ -55,7 +60,9 @@ label_opisanije.pack()#выставляю надпись
 
 win.mainloop()# делаю окно бесконечным до того как пользователь нажмет на крестик
 
-
+#работа с интернетом
+cli = client(host="localhost", port=9090)
+cli.connect_server()
 
 #переменые:
 text = pygame.font.SysFont('arial', 36) #размер и цвет основного текста
@@ -362,16 +369,23 @@ def kol():
     elif lose_igrok2 == True:
         game_over = text.render("GAME OVER, press "'"SPEACE"'" to start game",True,(WHITE)) #пишу что человек проиграл и если хочет продолжить играть то пусть нажмет SPEASCE
         OSwin.blit(game_over,(90,350)) #выставляю надпись game over на показ
-        image_igrok2 = pygame.image.load("common_images/celovek_sinij_zeljonka0.png")#меняю человека на плачушего
+        image_igrok2 = pygame.image.load("common_images/celovek_sinij_placet0.png")#меняю человека на плачушего
         if stop_smerti_igrok2 == False:
             smerti_igrok2 += 1
             stop_smerti_igrok2 = True
     else:
-        image_igrok = pygame.image.load("common_images/celovek_1.png") #востанавливаю картинку игрока, с плачущего на улыбающегося
+        image_igrok = pygame.image.load("common_images/celovek_zeljonka0.png") #востанавливаю картинку игрока, с плачущего на улыбающегося
         image_igrok2 = pygame.image.load("common_images/celovek_sinij0.png") #востанавливаю картинку игрока, с плачущего на улыбающегося
 
     pygame.display.update()  
             
+def send_and_get_player():
+    global cli
+    global x_igrok
+    global x_igrok2
+    global y_igrok
+    global y_igrok2
+    Y_and_X = cli.send("x:{0}y:{1}".format(x_igrok,y_igrok))#получаю и отправляю данные о X и Y игроков
 
 def score_zvezda():
     global shirota_igrok          #

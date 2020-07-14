@@ -30,15 +30,8 @@ class client():
             if self.response_server == None:
                 return "0"
             else:
-                print(self.response_server)
                 return self.response_server
 
 
-cli = client(host="localhost", port=7000)
-cli.connect_server()
-if cli == False:
-    pass
-else:
-    while True:
-        print(cli.send("-"))
+
 
