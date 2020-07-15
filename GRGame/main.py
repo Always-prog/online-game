@@ -7,15 +7,10 @@ import sys
 from INTERNET.client import client
 pygame.init() #вызываю все методы pygame
 
-cli = client(host="localhost", port=9090)
-cli.connect_server()
-if cli == False:
-    print("ou nou")
-    sys.exit()
 
 
 
-
+cli = None
 win = Tk() #создфю окно для ввода имени
 win.title("okno")#делаю заголовок
 win.geometry("500x500")#ширина и высота окна
@@ -60,9 +55,6 @@ label_opisanije.pack()#выставляю надпись
 
 win.mainloop()# делаю окно бесконечным до того как пользователь нажмет на крестик
 
-#работа с интернетом
-cli = client(host="localhost", port=9090)
-cli.connect_server()
 
 #переменые:
 text = pygame.font.SysFont('arial', 36) #размер и цвет основного текста
@@ -149,7 +141,7 @@ visota_zvezda = 25
 
 #конец переменых для звезды-------
 #-----------------------------------------------
-
+#интернет
 
 
 
@@ -305,6 +297,7 @@ def draw_OSwin_hodjba():
             OSwin.blit(image_igrok2, (x_igrok2, y_igrok2))  # если он не идет ни на право ни налево то стоит
 
 
+
 def kol():
     global y_kol            #
     global image_kol         #
@@ -379,13 +372,34 @@ def kol():
 
     pygame.display.update()  
             
-def send_and_get_player():
-    global cli
+def send_and_get_player(Y,X):
     global x_igrok
-    global x_igrok2
+    global x_igrok2############dds
     global y_igrok
     global y_igrok2
-    Y_and_X = cli.send("x:{0}y:{1}".format(x_igrok,y_igrok))#получаю и отправляю данные о X и Y игроков
+    global cli
+    if cli != None:
+        pass
+    else:
+        cli = client(host="localhost", port=9090)
+        cli.connect_server()
+
+    try:
+
+        Y_and_X = cli.send("{0}:{1}".format(X,Y))#получаю и отправляю данные о X и Y игроков
+    except BaseException as e:
+        pass
+    try:
+        Y_and_X = Y_and_X.decode("utf-8")
+        Y_and_X.split(":")
+        x_igrok2 = int(Y_and_X.split(":")[0])
+        y_igrok2 = int(Y_and_X.split(":")[1])
+    except BaseException as e:
+        pass
+    print(x_igrok2, " ",y_igrok2)
+
+
+
 
 def score_zvezda():
     global shirota_igrok          #
@@ -533,75 +547,23 @@ while pley == True:
             if jump >= -10:
                 if jump < 0:
                     y_igrok += (jump ** 2) / 2 #опускаю игрока
+                    send_and_get_player(y_igrok,x_igrok)
                 else:
                     y_igrok -= (jump ** 2) / 2 #поднимаю игрока
+                    send_and_get_player(y_igrok,x_igrok)
                 jump -= 1
+
 
             else:
                 if_jump = False #говорю что прыжок закончен и можно делать следующий
                 jump = 10 #вызвращаю переменую отвечающую за прыжок на местоd
 
-###################PLAYER2################################
-    if keys[pygame.K_SPACE]:  # если нажат пробел
-        if lose_igrok2 == True:  # если человек проиграл выполняй следующее
-            speed_kol = 20  # востанавляю скорость кола
-            stop_smerti_igrok = False  # возвращаю, чтобы в методе "kol" смерти смогли записаться заново
-            if lose_igrok2 == True:
-                lose_igrok2 = False
-            if x_kol > 400 and x_kol < 600:  # если кол на середине...
-                x_igrok2 = 200  # то игрок будет скраю
-            else:  # иначе
-                x_igrok2 = 500  # игрок будет в середине
-
-    if keys[pygame.K_RIGHT]:
-        if x_igrok2 < OSwin_shirota - shirota_igrok - 5:  # проверая не достиг ли персонаж конца карты
-            if lose_igrok2 == False:
-                if speed_igrok2 > 10:
-                    speed_igrok2 -= 1
-                x_igrok2 += speed_igrok2  # персонаж двигаеться вправо
-                animacija_right_igrok2 = True  # будет двигатсья вправо
-                animacija_left_igrok2 = False  # он теперь не будет двигатсья влево
-                animacija_cislo2 += 4  # прибавляю, для того чтобы в списке walk_right происходили изменения кортинки
-
-    elif keys[pygame.K_LEFT]:
-        if x_igrok2 > 10:  # проверая не достиг ли персонаж конца карты
-            if lose_igrok2 == False:
-                if speed_igrok2 > 10:
-                    speed_igrok2 -= 1
-                x_igrok2 -= speed_igrok2  # персонаж двигаеться влево
-                animacija_right_igrok2 = False  # он теперь не будет двигатсья в право
-                animacija_left_igrok2 = True  # будет двигатсья влево
-                animacija_cislo2 += 4  # прибавляю, для того чтобы в списке walk_left происходили изменения кортинки
-    else:
-        animacija_cislo2 = 0
-
-    # анимация прышка--------------------------------------------------------------
-    if lose_igrok2 == False:
-        if not (if_jump2):
-            if keys[pygame.K_UP] and y_igrok2 > 5:
-                if_jump2 = True
-        else:
-            if speed_igrok2 >= 18:
-                speed_igrok2 -= 1
-            else:
-                speed_igrok2 += 1
-            animacija_cislo2 = 0  # для того чтобы небыло анимации ходьбы во время прышка
-            if jump2 >= -10:
-                if jump2 < 0:
-                    y_igrok2 += (jump2 ** 2) / 2  # опускаю игрока
-                else:
-                    y_igrok2 -= (jump2 ** 2) / 2  # поднимаю игрока
-                jump2 -= 1
-
-            else:
-                if_jump2 = False  # говорю что прыжок закончен и можно делать следующий
-                jump2 = 10  # вызвращаю переменую отвечающую за прыжок на место
 
     #конец анимации прышка----------------
     draw_OSwin_hodjba() #вызываю метод заполнения экрана                
     score_zvezda()
     kol()
-
+    send_and_get_player(y_igrok,x_igrok)
     
     
     

@@ -4,7 +4,7 @@ import socket
 
 
 class client():
-    def __init__(self,host: str = "localhost", port: int = 9090, recv_range: int = 2048, timeout: float = 0.2):
+    def __init__(self,host: str = "localhost", port: int = 9090, recv_range: int = 2048, timeout: float = 0.1):
         self.host = host
         self.port = port
         self.recv_range = recv_range
@@ -31,6 +31,8 @@ class client():
                 return "0"
             else:
                 return self.response_server
+    def get(self):
+        return True
 
 
 

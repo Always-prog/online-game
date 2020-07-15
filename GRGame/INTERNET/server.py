@@ -1,7 +1,7 @@
 import socket
 
 sock = socket.socket()
-sock.bind(('0.0.0.0', 7000))
+sock.bind(('', 9090))
 sock.settimeout(0.1)
 sock.listen(6)
 
@@ -19,6 +19,7 @@ while True:
             para["conn"] = conn
             para["addr"] = addr
         elif para["status"] == False:
+            print("para create")
             para["status"] = True
             pars.append({"conn1":para["conn"],
                          "addr1":para["addr"],
