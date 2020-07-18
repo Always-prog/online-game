@@ -1,7 +1,7 @@
 import socket
 
 sock = socket.socket()
-sock.bind(('', 9090))
+sock.bind(('10.164.0.2', 7000))
 sock.settimeout(0.1)
 sock.listen(6)
 
