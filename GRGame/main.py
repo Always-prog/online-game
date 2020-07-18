@@ -1,9 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from tkinter import *
-import random
+import random; random.seed(1)
 import pygame
 import sys
+from multiprocessing import Process
 from INTERNET.client import client
 pygame.init() #вызываю все методы pygame
 
@@ -52,9 +53,47 @@ label_text.pack()#выставляю надпись
 vvod_imeni.pack()#выставляю строку ввода
 btn.pack()#выставляю кнопку
 label_opisanije.pack()#выставляю надпись
-
 win.mainloop()# делаю окно бесконечным до того как пользователь нажмет на крестик
 
+######LOBBY######
+button = None
+Label_status = None
+def connect_to_server():
+    global cli
+    global button
+    global Label_status
+    if cli == None:
+        cli = client()
+        cli.connect_server()
+
+    else:
+        Label_status.config(text="поиск игрока")
+        try:
+            sends = cli.send("123:321")
+            if sends == None:
+                Label_status.config(text="игрок нашелся")
+                button.config(text="играть!")
+            elif sends == b"find":
+                pass
+            else:
+                pass
+        except ConnectionAbortedError as e:
+            Label_status.config(text="сервер не ответил")
+            Label_status.pack()
+
+def Lobby():
+    global Label_status
+    global button
+    Lobby = Tk()
+    Lobby.title("okno")
+    Lobby.geometry("500x650")
+    Label_status = Label(text="поиск")
+    button = Button(Lobby, text="начать", command=lambda: connect_to_server())
+    button.pack()
+    Label_status.pack()
+    Lobby.mainloop()
+
+Lobby()
 
 #переменые:
 text = pygame.font.SysFont('arial', 36) #размер и цвет основного текста
@@ -286,11 +325,11 @@ def draw_OSwin_hodjba():
 
     if animacija_left_igrok2 == True:
         OSwin.blit(walk_left2[animacija_cislo2 // 5], (x_igrok2, y_igrok2))  # выставляю картинку из списка "walk_left"
-        animacija_left_igrok2 = False
+
 
     elif animacija_right_igrok2 == True:
         OSwin.blit(walk_right2[animacija_cislo2 // 5], (x_igrok2, y_igrok2))  # выставляю картинку из списка "walk_right"
-        animacija_right_igrok2 = False
+
 
     else:
         if igrok == True:
@@ -372,12 +411,17 @@ def kol():
 
     pygame.display.update()  
             
-def send_and_get_player(Y,X):
+def send_and_get_player():
     global x_igrok
     global x_igrok2############dds
     global y_igrok
     global y_igrok2
+    global speed_kol
+    global speed_igrok
     global cli
+    global animacija_right_igrok2
+    global animacija_left_igrok2
+    global animacija_cislo2
     if cli != None:
         pass
     else:
@@ -386,17 +430,37 @@ def send_and_get_player(Y,X):
 
     try:
 
-        Y_and_X = cli.send("{0}:{1}".format(X,Y))#получаю и отправляю данные о X и Y игроков
+        Y_and_X = cli.send("{0}:{1}".format(x_igrok,int(y_igrok)))#получаю и отправляю данные о X и Y игроков
+        if Y_and_X == b"finds":
+            print("find player")
+            speed_kol = 0
+            speed_igrok = 0
+        elif Y_and_X == b"disconnect":
+            print("player 2 is disconect :( ")
+        else:
+            speed_igrok = 10
+            speed_kol = 20
+            try:
+                Y_and_X = Y_and_X.decode("utf-8")
+                Y_and_X.split(":")
+                if x_igrok2 > int(Y_and_X.split(":")[0]):
+                    animacija_right_igrok2 = False
+                    animacija_left_igrok2 = True
+                    animacija_cislo2 += 4
+                elif x_igrok2 < int(Y_and_X.split(":")[0]):
+                    animacija_right_igrok2 = True
+                    animacija_left_igrok2 = False
+                    animacija_cislo2 += 4
+                else:
+                    animacija_right_igrok2 = False
+                    animacija_left_igrok2 = False
+                    animacija_cislo2 = 0
+                x_igrok2 = int(Y_and_X.split(":")[0])
+                y_igrok2 = int(Y_and_X.split(":")[1])
+            except BaseException as e:
+                pass
     except BaseException as e:
         pass
-    try:
-        Y_and_X = Y_and_X.decode("utf-8")
-        Y_and_X.split(":")
-        x_igrok2 = int(Y_and_X.split(":")[0])
-        y_igrok2 = int(Y_and_X.split(":")[1])
-    except BaseException as e:
-        pass
-    print(x_igrok2, " ",y_igrok2)
 
 
 
@@ -547,10 +611,8 @@ while pley == True:
             if jump >= -10:
                 if jump < 0:
                     y_igrok += (jump ** 2) / 2 #опускаю игрока
-                    send_and_get_player(y_igrok,x_igrok)
                 else:
                     y_igrok -= (jump ** 2) / 2 #поднимаю игрока
-                    send_and_get_player(y_igrok,x_igrok)
                 jump -= 1
 
 
@@ -563,7 +625,7 @@ while pley == True:
     draw_OSwin_hodjba() #вызываю метод заполнения экрана                
     score_zvezda()
     kol()
-    send_and_get_player(y_igrok,x_igrok)
+    send_and_get_player()
     
     
     
