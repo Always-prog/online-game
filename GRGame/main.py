@@ -4,10 +4,8 @@ from tkinter import *
 import random; random.seed(1)
 import pygame
 import sys
-from multiprocessing import Process
 from INTERNET.client import client
 pygame.init() #вызываю все методы pygame
-
 
 
 
@@ -431,6 +429,8 @@ def send_and_get_player():
     try:
 
         Y_and_X = cli.send("{0}:{1}".format(x_igrok,int(y_igrok)))#получаю и отправляю данные о X и Y игроков
+        Y_and_X = Y_and_X.replace(b"|",b"")[:len(Y_and_X)-7]
+
         if Y_and_X == b"finds":
             print("find player")
             speed_kol = 0
