@@ -429,36 +429,40 @@ def send_and_get_player():
     try:
 
         Y_and_X = cli.send("{0}:{1}".format(x_igrok,int(y_igrok)))#получаю и отправляю данные о X и Y игроков
-        Y_and_X = Y_and_X.replace(b"|",b"")[:len(Y_and_X)-7]
-
-        if Y_and_X == b"finds":
-            print("find player")
-            speed_kol = 0
-            speed_igrok = 0
-        elif Y_and_X == b"disconnect":
-            print("player 2 is disconect :( ")
+        print(Y_and_X)
+        if not Y_and_X:
+            pass
         else:
-            speed_igrok = 10
-            speed_kol = 20
-            try:
-                Y_and_X = Y_and_X.decode("utf-8")
-                Y_and_X.split(":")
-                if x_igrok2 > int(Y_and_X.split(":")[0]):
-                    animacija_right_igrok2 = False
-                    animacija_left_igrok2 = True
-                    animacija_cislo2 += 4
-                elif x_igrok2 < int(Y_and_X.split(":")[0]):
-                    animacija_right_igrok2 = True
-                    animacija_left_igrok2 = False
-                    animacija_cislo2 += 4
-                else:
-                    animacija_right_igrok2 = False
-                    animacija_left_igrok2 = False
-                    animacija_cislo2 = 0
-                x_igrok2 = int(Y_and_X.split(":")[0])
-                y_igrok2 = int(Y_and_X.split(":")[1])
-            except BaseException as e:
-                pass
+            Y_and_X = Y_and_X.replace(b"|",b"")[:len(Y_and_X)-7]
+
+            if Y_and_X == b"finds":
+                print("find player")
+                speed_kol = 0
+                speed_igrok = 0
+            elif Y_and_X == b"disconnect":
+                print("player 2 is disconect :( ")
+            else:
+                speed_igrok = 10
+                speed_kol = 20
+                try:
+                    Y_and_X = Y_and_X.decode("utf-8")
+                    Y_and_X.split(":")
+                    if x_igrok2 > int(Y_and_X.split(":")[0]):
+                        animacija_right_igrok2 = False
+                        animacija_left_igrok2 = True
+                        animacija_cislo2 += 4
+                    elif x_igrok2 < int(Y_and_X.split(":")[0]):
+                        animacija_right_igrok2 = True
+                        animacija_left_igrok2 = False
+                        animacija_cislo2 += 4
+                    else:
+                        animacija_right_igrok2 = False
+                        animacija_left_igrok2 = False
+                        animacija_cislo2 = 0
+                    x_igrok2 = int(Y_and_X.split(":")[0])
+                    y_igrok2 = int(Y_and_X.split(":")[1])
+                except BaseException as e:
+                    pass
     except BaseException as e:
         pass
 

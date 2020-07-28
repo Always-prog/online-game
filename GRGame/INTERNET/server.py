@@ -2,7 +2,7 @@ import socket
 
 sock = socket.socket()
 sock.bind(('', 9090))
-sock.settimeout(0.02)
+sock.settimeout(0.01)
 sock.listen(6)
 
 para = {
@@ -60,12 +60,10 @@ while True:
 
         else:
             try:
-                print("bytes: ",response_conn2)
-                print("tbytes: ",response_conn2+b"|"*(20-len(response_conn2)))
                 pars[para_num]["conn1"].send(response_conn2+b"|"*(20-len(response_conn2)))
                 pars[para_num]["conn2"].send(response_conn1+b"|"*(20-len(response_conn1)))
             except BaseException as e:
-                print("error: ",e)
+                pass
 
 
 
